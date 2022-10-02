@@ -12,9 +12,9 @@ import wget
 import os,sys
 
 # SSH 정보
-server = "192.168.1.201"
-user = "root"
-pwd = "test123"
+server = ""
+user = ""
+pwd = ""
 def base(request):
     return render(request, 'base.html')
 def input(request):
