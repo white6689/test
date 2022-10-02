@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Read</title>
+</head>
+<body>
+{% for page in pages %}
+  <a>Page Name: </a>{{ page.page_name }}<br>
+  <a>Service Type: </a>{{ page.service }}<br>
+  <a>Git URL</a>{{ page.git_url }}<br>
+  <a href = "/home/refresh/{{ page.id }}">갱신</a>
+  <a href = "/home/delete/{{ page.id }}">삭제</a>
+   <br>
+{% endfor %}
+</body>
+</html>

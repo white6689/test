@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<form action="getPost" method="post">
+    {% csrf_token %}
+    <label for="page_name">Page name</label>
+    <input name="page_name">
+    <select name="service_name" id="service_id">
+        <option selected="selected" disabled>Serivce select</option>
+        <option value="apache">Apache</option>
+        <option value="nginx">Nginx</option>
+    </select>
+    <label for="git_url">git주소</label>
+    <input name="git_url">
+    <label for="index_folder">index.html 위치</label>
+    <input name="index_folder">
+    <button>등록하기</button>
+</form>
+</body>
+</html>
