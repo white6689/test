@@ -11,10 +11,6 @@ import json
 import wget
 import os,sys
 
-# SSH 정보
-server = "192.168.1.201"
-user = "root"
-pwd = "test123"
 def base(request):
     return render(request, 'base.html')
 def input(request):
@@ -26,13 +22,13 @@ def getPost(request):
     git_url=request.POST.get('git_url', None)
     index_folder=request.POST.get('index_folder', None)
     test_val=ssh_connect(page_name, service, git_url, index_folder)
-    return HttpResponse("서비스 종류는  "+service+" shell"+test_val)
+    return redirect('/home/read')
 def readPage(request):
     pages=Instance.objects.all()
     context = {
          'pages' : pages
     }
-    return render(request, 'read.html', context)
+    return render(request, 'base.html', context)
 def refreshCommit(request, iid):
     instance=Instance.objects.get(id=iid)
     new_commit=get_commit(instance.git_url)
@@ -43,7 +39,7 @@ def refreshCommit(request, iid):
          instance.save()
          print("Todo: pagename, git commit 번호도 함께 보내준다. 그래서 Vagrant server에서 clone도하면서 DB도 업데이트하게 함")
          # ssh로 git 갱신 명령어 보내기
-         # ssh_connect_git(instance.page_name)
+    ssh_connect_git(instance.page_name, instance.index_folder)
     return redirect('/home/read')
 def deletePage(request, iid):
     instance=Instance.objects.get(id=iid)
@@ -54,21 +50,28 @@ def deletePage(request, iid):
 def ssh_connect(pn, srv, gu, idxf):
     cli = paramiko.SSHClient()
     cli.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    server = "192.168.1.201"
+    user = "root"
+    pwd = "test123"
     cli.connect(server, port=22, username=user, password=pwd)
     command="/root/vagrant-ansible-kubernetes-1.21/insert.sh "+pn+" "+srv+" "+gu+" "+idxf
+    # command="cd /root/vagrant-ansible-kubernetes-1.21; vagrant ssh k8s-master -- -t 'touch /home/vagrant/ingress/test_juyeon/text1.txt'"
     stdin, stdout, stderr = cli.exec_command(command)
     lines = stdout.readlines()
     print(''.join(lines))
     val=''.join(lines)
     cli.close()
     return val
-# git 갱신할 때 필요한 ssh
-def ssh_connect_git(pn):
+# git 갱신할 때 필요한 ssh, page name, index folder
+def ssh_connect_git(pn, idxf):
     cli = paramiko.SSHClient()
     cli.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    server = "192.168.1.201"
+    user = "root"
+    pwd = "test123"
     cli.connect(server, port=22, username=user, password=pwd)
     # 파일 경로
-    command=""+pn
+    command="/root/vagrant-ansible-kubernetes-1.21/giturl.sh "+pn+" "+idxf
     stdin, stdout, stderr = cli.exec_command(command)
     lines = stdout.readlines()
     print(''.join(lines))
@@ -78,9 +81,12 @@ def ssh_connect_git(pn):
 def ssh_connect_delete(pn):
     cli = paramiko.SSHClient()
     cli.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    server = "192.168.1.201"
+    user = "root"
+    pwd = "test123"
     cli.connect(server, port=22, username=user, password=pwd)
     # 파일 경로
-    command=" "+pn
+    command="cd /root/vagrant-ansible-kubernetes-1.21; /root/vagrant-ansible-kubernetes-1.21/delete.sh "+pn
     stdin, stdout, stderr = cli.exec_command(command)
     lines = stdout.readlines()
     print(''.join(lines))

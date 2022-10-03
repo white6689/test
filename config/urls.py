@@ -22,6 +22,6 @@ urlpatterns = [
     path('home/input', home.views.input),
     path('home/getPost', home.views.getPost),
     path('home/read', home.views.readPage),
-    path('home/refresh/<int:iid>',home.views.refreshCommit)
+    path('home/refresh/<int:iid>',home.views.refreshCommit),
     path('home/delete/<int:iid>', home.views.deletePage)
 ]
