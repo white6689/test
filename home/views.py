@@ -11,6 +11,10 @@ import json
 import wget
 import os,sys
 
+# SSH 정보
+server = ""
+user = ""
+pwd = ""
 def base(request):
     return render(request, 'base.html')
 def input(request):
